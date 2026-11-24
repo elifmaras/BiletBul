@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koltuk Seçimi | BiletBul</title>
+    <style>
+        :root {
+            --primary-accent: #FFB6C1; 
+            --accent-glow: rgba(255, 182, 193, 0.4);
+            --pure-black: #000000;
+            --card-bg: rgba(20, 20, 20, 0.85); 
+            --border-color: #333333;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+            --seat-empty: rgba(46, 204, 113, 0.8);
+            --seat-male: rgba(52, 152, 219, 0.8);
+            --seat-female: rgba(241, 148, 138, 0.8);
+            --seat-selected-glow: #FFCC00;
+        }
+
+        color-scheme: dark;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--pure-black); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; background-image: url('koltuksecimigorsel.png'); background-size: cover; background-position: center; background-attachment: fixed; }
+        header { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--pure-black); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; -webkit-text-stroke: 1.5px var(--primary-accent); text-shadow: 0 0 15px var(--accent-glow); }
+        .container { flex-grow: 1; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; gap: 40px; flex-wrap: wrap; }
+        .bus-layout-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(12px); display: flex; flex-direction: column; align-items: center; position: relative; }
+        .bus-layout-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--primary-accent); box-shadow: 0 0 15px var(--primary-accent); border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        .bus-layout-card h2 { font-size: 20px; margin-bottom: 30px; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; }
+        .legend { display: flex; gap: 15px; margin-bottom: 30px; background: rgba(0,0,0,0.5); padding: 15px 25px; border-radius: 12px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+        .color-box { width: 16px; height: 16px; border-radius: 4px; }
+        .bus-frame { border: 2px solid #555; border-radius: 40px 40px 10px 10px; padding: 30px 20px; display: flex; flex-direction: column; gap: 15px; background: rgba(10, 10, 10, 0.5); width: max-content; }
+        .steering-wheel { width: 40px; height: 40px; border: 4px solid #555; border-radius: 50%; align-self: flex-start; margin-bottom: 20px; position: relative; }
+        .steering-wheel::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 4px; background: #555; transform: translateY(-50%); }
+        .seat-row { display: flex; gap: 15px; align-items: center; }
+        .aisle { width: 40px; }
+        .seat { width: 45px; height: 50px; border-radius: 8px 8px 15px 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; color: var(--pure-black); transition: all 0.3s; position: relative; border: 1px solid rgba(255,255,255,0.2); }
+        .seat.male { background: var(--seat-male); cursor: not-allowed; color: #fff;}
+        .seat.female { background: var(--seat-female); cursor: not-allowed; color: #fff;}
+        .seat.empty { background: var(--seat-empty); cursor: pointer; }
+        .seat.empty:hover { opacity: 0.8; transform: translateY(-2px); }
+        .seat.selected-female { background: var(--seat-female); border: 2px solid var(--seat-selected-glow); box-shadow: 0 0 15px var(--seat-selected-glow); transform: scale(1.1); color: #fff; cursor: pointer; z-index: 2; }
+        .seat.selected-male { background: var(--seat-male); border: 2px solid var(--seat-selected-glow); box-shadow: 0 0 15px var(--seat-selected-glow); transform: scale(1.1); color: #fff; cursor: pointer; z-index: 2; }
+        .summary-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(12px); width: 350px; position: sticky; top: 100px; }
+        .summary-card h3 { color: var(--primary-accent); margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .summary-detail { display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--text-muted); font-size: 15px; }
+        .summary-detail span { color: var(--text-main); font-weight: bold; }
+        .total-price { font-size: 32px; color: var(--text-main); font-weight: 900; text-align: right; margin: 30px 0; }
+        .continue-btn { background: var(--primary-accent); color: var(--pure-black); border: none; padding: 18px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 100%; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .continue-btn:hover { background: #FFC0CB; transform: translateY(-3px); box-shadow: 0 10px 25px var(--accent-glow); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--primary-accent); padding: 30px 40px; border-radius: 15px; box-shadow: 0 0 30px var(--accent-glow); text-align: center; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .modal-content h3 { color: var(--text-main); margin-bottom: 10px; }
+        .modal-content p { color: var(--text-muted); margin-bottom: 25px; font-size: 14px;}
+        .modal-buttons { display: flex; gap: 15px; justify-content: center; }
+        .gender-btn { padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; transition: all 0.3s; }
+        .female-btn { background: var(--seat-female); border: 1px solid #fff; }
+        .male-btn { background: var(--seat-male); border: 1px solid #fff;}
+        .female-btn:hover { box-shadow: 0 0 15px var(--seat-female); transform: translateY(-2px); }
+        .male-btn:hover { box-shadow: 0 0 15px var(--seat-male); transform: translateY(-2px); }
+        .cancel-btn { padding: 12px 20px; background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .cancel-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">BiletBul</a>
+    </header>
+
+    <div class="container">
+        <div class="bus-layout-card">
+            <h2>Koltuk Seçimi</h2>
+            <div class="legend">
+                <div class="legend-item"><div class="color-box" style="background: var(--seat-empty);"></div> Boş</div>
+                <div class="legend-item"><div class="color-box" style="background: var(--seat-female);"></div> Dolu (Kadın)</div>
+                <div class="legend-item"><div class="color-box" style="background: var(--seat-male);"></div> Dolu (Erkek)</div>
+                <div class="legend-item"><div class="color-box" style="border: 2px solid var(--seat-selected-glow); background: #333;"></div> Sizin Seçiminiz</div>
+            </div>
+            
+            <div class="bus-frame" id="busFrame">
+                <div class="steering-wheel" title="Şoför"></div>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <h3>Sefer Özeti</h3>
+            <div class="summary-detail">Güzergah: <span id="summaryRoute">-</span></div>
+            <div class="summary-detail">Tarih: <span id="summaryDate">-</span></div>
+            <div class="summary-detail">Saat: <span id="summaryTime">-</span></div>
+            <br>
+            <div class="summary-detail" style="border-top: 1px solid #333; padding-top: 15px;">
+                Seçilen Koltuk(lar): <span id="selectedSeatsText">Yok</span>
+            </div>
+            <div class="total-price" id="totalPriceText">0 ₺</div>
+            <button class="continue-btn" onclick="goToPayment()">Devam Et</button>
+            <div style="text-align: center; margin-top: 12px; font-size: 13px; color: var(--text-muted);">Ödeme adımına geç</div>
+        </div>
+    </div>
+
+    <div id="genderModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Yolcu Cinsiyeti</h3>
+            <p><span id="modalSeatNum" style="font-weight:bold; color:var(--primary-accent);"></span> numaralı koltuk için yolcu cinsiyetini belirleyin:</p>
+            <div class="modal-buttons">
+                <button class="gender-btn female-btn" onclick="confirmGender('female')">Kadın</button>
+                <button class="gender-btn male-btn" onclick="confirmGender('male')">Erkek</button>
+                <button class="cancel-btn" onclick="closeModal()">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ticketPrice = 300; 
+        let selectedSeats = []; 
+        let pendingSeatElement = null; 
+        let pendingSeatNumber = null;
+        let currentSeferId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentSeferId = urlParams.get('sefer_id') || '507'; 
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/koltuklar/${currentSeferId}`);
+                const data = await response.json();
+
+                if (data.sefer) {
+                    document.getElementById('summaryRoute').innerText = `${data.sefer.kalkis_sehri} ➔ ${data.sefer.varis_sehri}`;
+                    document.getElementById('summaryDate').innerText = new Date(data.sefer.sefer_tarihi).toLocaleDateString('tr-TR');
+                    
+                    let saat = String(data.sefer.kalkis_saati);
+                    if (saat.includes('T')) {
+                        document.getElementById('summaryTime').innerText = saat.split('T')[1].substring(0, 5);
+                    } else {
+                        document.getElementById('summaryTime').innerText = saat.substring(0, 5);
+                    }
+                }
+
+                const kapasite = data.sefer ? data.sefer.total_koltuk_sayisi : 40;
+                renderBusSeats(kapasite, data.doluKoltuklar || []);
+
+            } catch (error) {
+                console.error("Bağlantı Hatası:", error);
+            }
+        });
+
+        function renderBusSeats(kapasite, doluKoltuklar) {
+            const busFrame = document.getElementById('busFrame');
+            busFrame.innerHTML = '<div class="steering-wheel" title="Şoför"></div>'; 
+            
+            let currentRow = document.createElement('div');
+            currentRow.className = 'seat-row';
+
+            // API'den ne geldiğini tarayıcı konsolunda (F12) görmek için ekliyoruz
+            console.log("API'den Gelen Dolu Koltuklar: ", doluKoltuklar);
+
+            for (let i = 1; i <= kapasite; i++) {
+                const seatDiv = document.createElement('div');
+                seatDiv.textContent = i;
+                
+                // GİZLİ TEHLİKE 1 ÇÖZÜMÜ: parseInt kullanarak tipleri eşitliyoruz
+                const doluMu = doluKoltuklar.find(k => parseInt(k.koltuk_no) === i);
+
+                // --- SENİN HARİKA VE KUSURSUZ MANTIĞIN BURADA ---
+                if (doluMu) {
+                    let cinsiyetClass = 'male'; // Sistem çökmesin diye varsayılan
+                    let sqlCinsiyet = 'Bilinmiyor'; 
+                    
+                    if (doluMu.cinsiyet) {
+                        let cinsiyet = String(doluMu.cinsiyet).trim().toUpperCase();
+                        sqlCinsiyet = cinsiyet; 
+                        
+                        // Cinsiyet K ise pembe, E ise mavi yapıyoruz.
+                        if (cinsiyet.startsWith('K') || cinsiyet === 'KADIN') {
+                            cinsiyetClass = 'female';
+                        } else if (cinsiyet.startsWith('E') || cinsiyet === 'ERKEK') {
+                            cinsiyetClass = 'male';
+                        }
+                    }
+                    
+                    seatDiv.className = `seat ${cinsiyetClass}`; 
+                    
+                    // RADAR: Fareyle koltuğun üzerine gelince SQL'den ne geldiğini gör
+                    seatDiv.title = `SQL'den Gelen: [${sqlCinsiyet}]`; 
+                } else {
+                    seatDiv.className = 'seat empty';
+                    seatDiv.onclick = function() { handleSeatClick(this, i); };
+                }
+                // --- KOD BURADA BİTİYOR ---
+
+                currentRow.appendChild(seatDiv);
+
+                if (i % 3 === 1) {
+                    const aisle = document.createElement('div');
+                    aisle.className = 'aisle';
+                    currentRow.appendChild(aisle);
+                }
+
+                if (i % 3 === 0 || i === kapasite) {
+                    busFrame.appendChild(currentRow);
+                    currentRow = document.createElement('div');
+                    currentRow.className = 'seat-row';
+                }
+            }
+        }
+
+        function handleSeatClick(seatElement, seatNumber) {
+            if (seatElement.classList.contains('selected-female') || seatElement.classList.contains('selected-male')) {
+                seatElement.classList.remove('selected-female', 'selected-male');
+                seatElement.classList.add('empty');
+                selectedSeats = selectedSeats.filter(seat => seat.num !== seatNumber);
+                updateSummary();
+            } else if (seatElement.classList.contains('empty')) {
+                pendingSeatElement = seatElement;
+                pendingSeatNumber = seatNumber;
+                document.getElementById('modalSeatNum').innerText = seatNumber;
+                document.getElementById('genderModal').style.display = 'flex';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('genderModal').style.display = 'none';
+            pendingSeatElement = null;
+            pendingSeatNumber = null;
+        }
+
+        function confirmGender(gender) {
+            pendingSeatElement.classList.remove('empty');
+            if (gender === 'female') {
+                pendingSeatElement.classList.add('selected-female');
+            } else {
+                pendingSeatElement.classList.add('selected-male');
+            }
+            selectedSeats.push({ num: pendingSeatNumber, gender: gender });
+            updateSummary();
+            closeModal();
+        }
+
+        function updateSummary() {
+            const seatsText = document.getElementById('selectedSeatsText');
+            const priceText = document.getElementById('totalPriceText');
+
+            if (selectedSeats.length > 0) {
+                let nums = selectedSeats.map(s => s.num).sort((a, b) => a - b);
+                seatsText.innerText = nums.join(', ');
+                priceText.innerText = (selectedSeats.length * ticketPrice) + " ₺";
+            } else {
+                seatsText.innerText = "Yok";
+                priceText.innerText = "0 ₺";
+            }
+        }
+
+        function goToPayment() {
+            if(selectedSeats.length === 0) {
+                alert("Lütfen devam etmek için en az bir koltuk seçiniz!");
+            } else {
+                const koltukVerisi = JSON.stringify(selectedSeats);
+                window.location.href = `odeme.html?sefer_id=${currentSeferId}&koltuklar=${koltukVerisi}`;
+            }
+        }
+    </script>
+</body>
+</html>

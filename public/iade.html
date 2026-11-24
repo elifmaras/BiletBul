@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilet İptal / İade | BiletBul</title>
+    <style>
+        :root {
+            --primary-accent: #FFB6C1; 
+            --accent-glow: rgba(255, 182, 193, 0.4);
+            --danger-color: #FF6B6B;
+            --danger-glow: rgba(255, 107, 107, 0.4);
+            --success-color: #2ecc71;
+            --success-glow: rgba(46, 204, 113, 0.4);
+            --pure-black: #000000;
+            --card-bg: rgba(20, 20, 20, 0.85);
+            --border-color: #333333;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+        }
+
+        color-scheme: dark;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body { background-color: var(--pure-black); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; background-image: url('iadegorsel.png'); background-size: cover; background-position: center; background-attachment: fixed; }
+
+        header { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--pure-black); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; -webkit-text-stroke: 1.5px var(--primary-accent); text-shadow: 0 0 15px var(--accent-glow); transition: all 0.3s ease; }
+        .logo:hover { color: var(--primary-accent); }
+        .header-links { display: flex; gap: 25px; align-items: center; }
+        .header-links a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: all 0.3s ease; position: relative; }
+        .header-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background-color: var(--primary-accent); transition: width 0.3s ease; }
+        .header-links a:hover { color: var(--text-main); }
+        .header-links a:hover::after { width: 100%; }
+
+        .container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+
+        .refund-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px 50px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(12px); width: 100%; max-width: 550px; position: relative; animation: fadeIn 0.5s ease-out; }
+        .refund-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--danger-color); box-shadow: 0 0 15px var(--danger-color); }
+        .refund-card h2 { font-size: 24px; margin-bottom: 5px; color: var(--text-main); text-align: center; }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+
+        .ticket-summary { background: rgba(0, 0, 0, 0.4); border: 1px dashed var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .ticket-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .ticket-row span { color: var(--text-muted); }
+        .ticket-row strong { color: var(--text-main); text-align: right; }
+        .pnr-highlight { color: var(--primary-accent); font-weight: bold; }
+
+        .warning-box { background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 25px; display: flex; gap: 15px; align-items: flex-start; }
+        .warning-icon { font-size: 20px; color: var(--danger-color); }
+        .warning-text h4 { color: var(--danger-color); margin-bottom: 5px; font-size: 15px; }
+        .warning-text p { font-size: 13px; color: #ccc; line-height: 1.5; }
+
+        .refund-amount-box { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.6); padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid var(--success-color); }
+        .refund-amount-box span { font-size: 14px; color: var(--text-muted); }
+        .refund-amount-box strong { font-size: 24px; color: var(--text-main); }
+
+        .agreement-group { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 25px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+        .action-buttons { display: flex; gap: 15px; }
+        .btn { flex: 1; padding: 16px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; text-align: center; border: none; text-decoration: none; }
+        .btn-cancel { background: transparent; color: var(--text-main); border: 2px solid #555; }
+        .btn-cancel:hover { background: rgba(255,255,255,0.05); border-color: #888; }
+        .btn-danger { background: var(--danger-color); color: var(--pure-black); }
+        .btn-danger:hover { background: #FF8A8A; transform: translateY(-2px); box-shadow: 0 10px 25px var(--danger-glow); }
+
+        .success-section { background: var(--card-bg); border: 1px solid var(--success-color); padding: 60px 40px; border-radius: 20px; box-shadow: 0 15px 40px var(--success-glow); backdrop-filter: blur(12px); width: 100%; max-width: 550px; text-align: center; display: none; flex-direction: column; align-items: center; animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .success-icon { width: 80px; height: 80px; background: rgba(46, 204, 113, 0.15); border: 3px solid var(--success-color); color: var(--success-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 40px; margin-bottom: 25px; box-shadow: 0 0 25px var(--success-glow); }
+        .success-section h2 { font-size: 26px; color: var(--text-main); margin-bottom: 15px; line-height: 1.4; }
+        .success-section p { font-size: 15px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; }
+        .inline-logo { font-size: 24px; font-weight: 900; color: var(--pure-black); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; -webkit-text-stroke: 1px var(--primary-accent); text-shadow: 0 0 10px var(--accent-glow); transition: all 0.3s ease; display: inline-block; margin-left: 5px; vertical-align: baseline; position: relative; top: 3px; }
+        .inline-logo:hover { color: var(--primary-accent); transform: scale(1.05) translateY(-2px); text-shadow: 0 0 20px var(--accent-glow); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @media (max-width: 600px) { .action-buttons { flex-direction: column-reverse; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">BiletBul</a>
+        <div class="header-links">
+            <a href="sorgula.html">Seyahat Sorgula</a>
+            <a href="login.html">Üye Girişi</a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="refund-card" id="refundCard">
+            <h2>Bilet İptal / İade</h2>
+            <p class="subtitle">Aşağıdaki biletiniz için iade işlemi başlatıyorsunuz.</p>
+
+            <div class="ticket-summary">
+                <div class="ticket-row"><span>Yolcu:</span> <strong id="detayYolcu">Yükleniyor...</strong></div>
+                <div class="ticket-row"><span>PNR Kodu:</span> <strong class="pnr-highlight" id="detayPNR">-</strong></div>
+                <div class="ticket-row"><span>Güzergah:</span> <strong id="detayGuzergah">-</strong></div>
+                <div class="ticket-row"><span>Tarih:</span> <strong id="detayTarih">-</strong></div>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-icon">⚠</div>
+                <div class="warning-text">
+                    <h4>Kesintisiz İade Hakkı</h4>
+                    <p>Seferinize 24 saatten fazla süre kaldığı için herhangi bir kesinti uygulanmayacaktır. Bilet tutarınız bankanıza bağlı olarak 1-3 iş günü içerisinde ödeme yaptığınız karta iade edilir.</p>
+                </div>
+            </div>
+
+            <div class="refund-amount-box">
+                <span>İade Edilecek Tutar:</span>
+                <strong id="detayFiyat">0,00 ₺</strong>
+            </div>
+
+            <form id="refundForm">
+                <label class="agreement-group">
+                    <input type="checkbox" required style="width: 16px; height: 16px; accent-color: var(--danger-color); margin-top: 2px;">
+                    <span>İade koşullarını okudum, biletin iptal edilmesini onaylıyorum. Bu işlem <b>geri alınamaz</b>.</span>
+                </label>
+
+                <div class="action-buttons">
+                    <a href="sorgula.html" class="btn btn-cancel">Vazgeç</a>
+                    <button type="submit" id="btnIptal" class="btn btn-danger">Bileti İptal Et</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-section" id="successSection">
+            <div class="success-icon">✔</div>
+            <h2>İade İşlemi Başarılı!</h2>
+            <p style="margin-bottom: 25px;"><b id="successPnr"></b> numaralı biletiniz iptal edilmiştir. <br> <span id="successFiyat"></span> tutarındaki ödemeniz bankanıza iletilmiştir, birkaç gün içinde ekstrenize yansıyacaktır.</p>
+            
+            <p style="font-size: 18px; color: var(--text-muted); margin-bottom: 5px;">Ana Sayfaya Dön:</p>
+            <p style="font-size: 18px; color: var(--text-muted);">Yeni <a href="index.html" class="inline-logo">BiletBul</a></p>
+        </div>
+
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const pnr = urlParams.get('pnr');
+        let iadeTutari = "";
+
+        // SAYFA YÜKLENDİĞİNDE BİLGİLERİ GETİR
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!pnr) {
+                alert("Geçersiz işlem! Lütfen biletinizi sorgulayıp gelin.");
+                window.location.href = "sorgula.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/bilet-detay/${pnr}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('detayPNR').innerText = data.bilet.bilet_id;
+                    document.getElementById('detayYolcu').innerText = data.bilet.yolcu;
+                    document.getElementById('detayGuzergah').innerText = data.bilet.guzergah;
+                    document.getElementById('detayFiyat').innerText = data.bilet.fiyat + " ₺";
+                    
+                    iadeTutari = data.bilet.fiyat + " ₺";
+
+                    const tarih = new Date(data.bilet.sefer_tarihi).toLocaleDateString('tr-TR');
+                    document.getElementById('detayTarih').innerText = tarih;
+                } else {
+                    alert("Bilet bilgisine ulaşılamadı.");
+                    window.location.href = "sorgula.html";
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Sunucu hatası.");
+            }
+        });
+
+        // İPTAL BUTONUNA BASILDIĞINDA
+        document.getElementById('refundForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const btn = document.getElementById('btnIptal');
+            btn.innerHTML = "İşleniyor...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/iade-et', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pnr: pnr })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // İade kartını gizle, başarı ekranını göster
+                    document.getElementById('refundCard').style.display = 'none';
+                    document.getElementById('successPnr').innerText = pnr;
+                    document.getElementById('successFiyat').innerText = iadeTutari;
+                    document.getElementById('successSection').style.display = 'flex';
+                } else {
+                    alert("İptal işlemi sırasında hata oluştu!");
+                    btn.innerHTML = "Bileti İptal Et";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert("Sunucu bağlantı hatası!");
+                btn.innerHTML = "Bileti İptal Et";
+                btn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>

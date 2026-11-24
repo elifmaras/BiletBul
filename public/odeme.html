@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Güvenli Ödeme | BiletBul</title>
+
+    <style>
+
+        :root {
+
+            /* Soft Pastel Pembe Vurgu Renkleri */
+
+            --primary-accent: #FFB6C1; 
+
+            --accent-glow: rgba(255, 182, 193, 0.4);
+
+            
+
+            /* Başarı/Onay Renkleri */
+
+            --success-color: #2ecc71;
+
+            --success-glow: rgba(46, 204, 113, 0.4);
+
+
+
+            --pure-black: #000000;
+
+            --card-bg: rgba(20, 20, 20, 0.85); 
+
+            --border-color: #333333;
+
+            --text-main: #FFFFFF;
+
+            --text-muted: #888888;
+
+        }
+
+
+
+        color-scheme: dark;
+
+
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+
+
+
+        body {
+
+            background-color: var(--pure-black);
+
+            color: var(--text-main);
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+
+
+            /* ARKA PLAN GÖRSELİ */
+
+            background-image: url('odemegorsel.png'); 
+
+            background-size: cover; 
+
+            background-position: center; 
+
+            background-attachment: fixed; 
+
+        }
+
+
+
+        /* HEADER TASARIMI */
+
+        header {
+
+            background: rgba(0, 0, 0, 0.7);
+
+            backdrop-filter: blur(15px);
+
+            -webkit-backdrop-filter: blur(15px);
+
+            padding: 20px 50px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            border-bottom: 1px solid var(--border-color);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+        }
+
+
+
+        .logo {
+
+            font-size: 32px;
+
+            font-weight: 900;
+
+            color: var(--pure-black);
+
+            text-decoration: none;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            -webkit-text-stroke: 1.5px var(--primary-accent);
+
+            text-shadow: 0 0 15px var(--accent-glow);
+
+        }
+
+
+
+        .container {
+
+            flex-grow: 1;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            padding: 50px 20px;
+
+            gap: 40px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+
+        /* SOL PANEL: ÖDEME FORMU */
+
+        .payment-section {
+
+            background: var(--card-bg);
+
+            border: 1px solid var(--border-color);
+
+            padding: 40px;
+
+            border-radius: 20px;
+
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+
+            backdrop-filter: blur(12px);
+
+            width: 100%;
+
+            max-width: 600px;
+
+            position: relative;
+
+            animation: fadeIn 0.5s ease-out;
+
+        }
+
+
+
+        .payment-section::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 3px;
+
+            background: var(--primary-accent);
+
+            box-shadow: 0 0 15px var(--primary-accent);
+
+            border-top-left-radius: 20px;
+
+            border-top-right-radius: 20px;
+
+        }
+
+
+
+        .payment-section h2 {
+
+            font-size: 22px;
+
+            margin-bottom: 30px;
+
+            color: var(--text-main);
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            text-align: center;
+
+        }
+
+
+
+        .section-title {
+
+            font-size: 14px;
+
+            color: var(--primary-accent);
+
+            margin: 25px 0 15px 0;
+
+            border-bottom: 1px solid var(--border-color);
+
+            padding-bottom: 5px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+        }
+
+
+
+        /* FORM ALANLARI */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+
+        }
+
+
+
+        .input-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+
+        .input-group.full-width {
+
+            grid-column: span 2;
+
+        }
+
+
+
+        .input-group label {
+
+            font-size: 12px;
+
+            color: var(--text-muted);
+
+            margin-bottom: 8px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            font-weight: 600;
+
+        }
+
+
+
+        .input-group input {
+
+            background: rgba(0, 0, 0, 0.5);
+
+            border: 1px solid var(--border-color);
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            color: var(--text-main);
+
+            outline: none;
+
+            transition: all 0.3s ease;
+
+        }
+
+
+
+        .input-group input:focus {
+
+            border-color: var(--primary-accent);
+
+            box-shadow: 0 0 10px rgba(255, 182, 193, 0.2);
+
+            background: rgba(0, 0, 0, 0.8);
+
+        }
+
+
+
+        /* SAĞ PANEL: SİPARİŞ ÖZETİ */
+
+        .summary-card {
+
+            background: var(--card-bg);
+
+            border: 1px solid var(--border-color);
+
+            padding: 40px;
+
+            border-radius: 20px;
+
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+
+            backdrop-filter: blur(12px);
+
+            width: 100%;
+
+            max-width: 380px;
+
+            position: sticky;
+
+            top: 100px;
+
+            animation: fadeIn 0.5s ease-out;
+
+        }
+
+
+
+        .summary-card h3 {
+
+            color: var(--primary-accent);
+
+            margin-bottom: 25px;
+
+            border-bottom: 1px solid var(--border-color);
+
+            padding-bottom: 10px;
+
+        }
+
+
+
+        .summary-detail {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+            color: var(--text-muted);
+
+            font-size: 14px;
+
+        }
+
+
+
+        .summary-detail span { color: var(--text-main); font-weight: bold; text-align: right;}
+
+
+
+        .total-price {
+
+            font-size: 32px;
+
+            color: var(--text-main);
+
+            font-weight: 900;
+
+            text-align: right;
+
+            margin: 30px 0;
+
+        }
+
+
+
+        .pay-btn {
+
+            background: var(--primary-accent);
+
+            color: var(--pure-black);
+
+            border: none;
+
+            padding: 18px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            width: 100%;
+
+            transition: all 0.3s;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+
+        .pay-btn:hover {
+
+            background: #FFC0CB;
+
+            transform: translateY(-3px);
+
+            box-shadow: 0 10px 25px var(--accent-glow);
+
+        }
+
+
+
+        .secure-badge {
+
+            text-align: center;
+
+            font-size: 12px;
+
+            color: #2ecc71;
+
+            margin-top: 15px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 5px;
+
+        }
+
+
+
+        /* --- BAŞARI EKRANI (Ödeme Sonrası) --- */
+
+        .success-section {
+
+            background: var(--card-bg);
+
+            border: 1px solid var(--success-color);
+
+            padding: 60px 40px;
+
+            border-radius: 20px;
+
+            box-shadow: 0 15px 40px var(--success-glow);
+
+            backdrop-filter: blur(12px);
+
+            width: 100%;
+
+            max-width: 700px;
+
+            text-align: center;
+
+            display: none; /* Başlangıçta gizli */
+
+            flex-direction: column;
+
+            align-items: center;
+
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        }
+
+
+
+        .success-icon {
+
+            width: 90px;
+
+            height: 90px;
+
+            background: rgba(46, 204, 113, 0.15);
+
+            border: 3px solid var(--success-color);
+
+            color: var(--success-color);
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 45px;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 0 25px var(--success-glow);
+
+        }
+
+
+
+        .success-section h2 {
+
+            font-size: 32px;
+
+            color: var(--text-main);
+
+            margin-bottom: 15px;
+
+            line-height: 1.4;
+
+        }
+
+
+
+        .success-section p {
+
+            font-size: 16px;
+
+            color: var(--text-muted);
+
+            margin-bottom: 35px;
+
+        }
+
+
+
+        .success-section p b {
+
+            color: var(--primary-accent);
+
+        }
+
+
+
+        .home-btn {
+
+            background: transparent;
+
+            color: var(--primary-accent);
+
+            border: 2px solid var(--primary-accent);
+
+            padding: 15px 40px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: all 0.3s;
+
+            text-decoration: none;
+
+            text-transform: uppercase;
+
+        }
+
+
+
+        .home-btn:hover {
+
+            background: var(--primary-accent);
+
+            color: var(--pure-black);
+
+            box-shadow: 0 0 20px var(--accent-glow);
+
+        }
+
+
+
+        @keyframes fadeIn {
+
+            from { opacity: 0; transform: translateY(20px); }
+
+            to { opacity: 1; transform: translateY(0); }
+
+        }
+
+
+
+        @keyframes popIn {
+
+            from { opacity: 0; transform: scale(0.8); }
+
+            to { opacity: 1; transform: scale(1); }
+
+        }
+
+
+
+        /* MOBİL UYUM */
+
+        @media (max-width: 900px) {
+
+            .form-grid { grid-template-columns: 1fr; }
+
+            .input-group.full-width { grid-column: span 1; }
+
+            .success-section h2 { font-size: 24px; }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <header>
+
+        <a href="index.html" class="logo">BiletBul</a>
+
+    </header>
+
+
+
+    <div class="container" id="mainContainer">
+
+        
+
+        <div class="payment-section" id="paymentCard">
+
+            <h2>Ödeme Bilgileri</h2>
+
+
+
+            <form id="paymentForm">
+
+                
+
+                <div class="section-title">Yolcu Bilgileri</div>
+
+                <div class="form-grid" style="margin-bottom: 20px;">
+
+                    <div class="input-group full-width">
+
+                        <label for="tcNo">TC Kimlik Numarası</label>
+
+                        <input type="text" id="tcNo" placeholder="11 Haneli TC Kimlik Numaranız" maxlength="11" autocomplete="off" required>
+
+                    </div>
+
+                    <div class="input-group">
+
+                        <label for="ad">Ad</label>
+
+                        <input type="text" id="ad" placeholder="Adınız" autocomplete="off" required>
+
+                    </div>
+
+                    <div class="input-group">
+
+                        <label for="soyad">Soyad</label>
+
+                        <input type="text" id="soyad" placeholder="Soyadınız" autocomplete="off" required>
+
+                    </div>
+
+                    <div class="input-group full-width">
+    <label for="sifre">Üye Şifresi</label>
+    <input type="password" id="sifre" placeholder="Şifrenizi giriniz" autocomplete="off" required>
+</div>
+
+                </div>
+
+
+
+                <div class="section-title">Kredi Kartı Bilgileri</div>
+
+                <div class="form-grid">
+
+                    <div class="input-group full-width">
+
+                        <label for="cardName">Kart Üzerindeki İsim</label>
+
+                        <input type="text" id="cardName" placeholder="Örn: Merve Yılmaz" autocomplete="off" required>
+
+                    </div>
+
+
+
+                    <div class="input-group full-width">
+
+                        <label for="cardNumber">Kart Numarası</label>
+
+                        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off" required>
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label for="cardExpiry">Son Kullanma (AA/YY)</label>
+
+                        <input type="text" id="cardExpiry" placeholder="04/28" maxlength="5" autocomplete="off" required>
+
+                    </div>
+
+
+
+                    <div class="input-group">
+
+                        <label for="cardCVC">CVC / CVV</label>
+
+                        <input type="password" id="cardCVC" placeholder="•••" maxlength="3" autocomplete="off" required>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <div class="summary-card" id="summaryCard">
+
+            <h3>Sipariş Özeti</h3>
+
+            
+
+            <div class="summary-detail">Güzergah: <span id="ozetGuzergah">Yükleniyor...</span></div>
+
+            <div class="summary-detail">Tarih / Saat: <span id="ozetTarihSaat">Yükleniyor...</span></div>
+
+            <div class="summary-detail">Koltuk(lar): <span id="ozetKoltuklar">-</span></div>
+
+            
+
+            <div style="border-top: 1px solid var(--border-color); margin: 20px 0;"></div>
+
+            
+
+            <div class="summary-detail">Bilet Tutarı: <span id="ozetBiletTutari">0,00 ₺</span></div>
+
+            <div class="summary-detail">Hizmet Bedeli: <span>0,00 ₺</span></div>
+
+            
+
+            <div class="total-price" id="ozetToplam">0,00 ₺</div>
+
+
+
+            <button type="submit" form="paymentForm" class="pay-btn">
+
+                🔒 Ödemeyi Tamamla
+
+            </button>
+
+            <div class="secure-badge">
+
+                ✔ 256-bit SSL ile Güvenli Ödeme
+
+            </div>
+
+        </div>
+
+
+
+        <div class="success-section" id="successSection">
+            <div class="success-icon">✔</div>
+            <h2>Ödemeniz başarıyla alındı! <br> Keyifli yolculuklar dileriz.</h2>
+            <p style="margin-bottom: 20px;">Bilet detaylarınız sistemimize başarıyla kaydedilmiştir!</p>
+            
+            <p style="font-size: 18px; color: var(--text-main); margin-bottom: 35px; background: rgba(255, 182, 193, 0.1); padding: 15px 30px; border-radius: 12px; border: 1px solid var(--primary-accent); display: inline-block;">
+                PNR Kodunuz: <b id="pnrEkrani" style="font-size: 24px; letter-spacing: 2px;">-</b>
+            </p>
+
+            <a href="index.html" class="home-btn">Ana Sayfaya Dön</a>
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+        // URL'den gelen verileri alıyoruz
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const seferId = urlParams.get('sefer_id');
+
+        const koltuklarData = urlParams.get('koltuklar');
+
+        
+
+        let secilenKoltuklar = [];
+
+        const biletFiyati = 300; 
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            if (seferId && koltuklarData) {
+
+                secilenKoltuklar = JSON.parse(koltuklarData);
+
+                
+
+                // Koltukları ve cinsiyetleri ekrana bas (Örn: 7 (Kadın), 12 (Erkek))
+
+                let koltukMetni = secilenKoltuklar.map(k => `${k.num} (${k.gender === 'female' ? 'Kadın' : 'Erkek'})`).join(', ');
+
+                document.getElementById('ozetKoltuklar').innerText = koltukMetni;
+
+
+
+                // Fiyatı Hesapla
+
+                let toplamTutar = secilenKoltuklar.length * biletFiyati;
+
+                document.getElementById('ozetBiletTutari').innerText = toplamTutar + ",00 ₺";
+
+                document.getElementById('ozetToplam').innerText = toplamTutar + ",00 ₺";
+
+
+
+                // Server'dan Sefer Bilgisini Çekip Ekrana Yazdırıyoruz
+
+                fetch(`http://localhost:3000/api/koltuklar/${seferId}`)
+
+                    .then(res => res.json())
+
+                    .then(data => {
+
+                        if(data.sefer) {
+
+                            document.getElementById('ozetGuzergah').innerText = `${data.sefer.kalkis_sehri} ➔ ${data.sefer.varis_sehri}`;
+
+                            
+
+                            let tarih = new Date(data.sefer.sefer_tarihi).toLocaleDateString('tr-TR');
+
+                            let saat = String(data.sefer.kalkis_saati);
+
+                            if(saat.includes('T')) saat = saat.split('T')[1].substring(0, 5);
+
+                            else saat = saat.substring(0, 5);
+
+                            
+
+                            document.getElementById('ozetTarihSaat').innerText = `${tarih} - ${saat}`;
+
+                        }
+
+                    })
+
+                    .catch(err => console.error("Özet yüklenirken hata:", err));
+
+
+
+            } else {
+
+                alert("Lütfen önce koltuk seçimi yapınız!");
+
+                window.location.href = "index.html"; 
+
+            }
+
+        });
+
+
+
+        const cardNumberInput = document.getElementById('cardNumber');
+
+        const cardExpiryInput = document.getElementById('cardExpiry');
+
+
+
+        // Kart Numarası Formatlama
+
+        cardNumberInput.addEventListener('input', function(e) {
+
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+
+            let formattedValue = '';
+
+            for(let i=0; i<value.length; i++) {
+
+                if(i > 0 && i % 4 === 0) formattedValue += ' ';
+
+                formattedValue += value[i];
+
+            }
+
+            e.target.value = formattedValue;
+
+        });
+
+
+
+        // Son Kullanma Tarihi Formatlama
+
+        cardExpiryInput.addEventListener('input', function(e) {
+
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+
+            if(value.length > 2) value = value.substring(0,2) + '/' + value.substring(2,4);
+
+            e.target.value = value;
+
+        });
+
+
+
+    
+
+        // Form Gönderimi ve GERÇEK Veritabanı Kaydı
+
+        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+
+            e.preventDefault(); 
+
+            
+
+            // Kullanıcının formda yazdıklarını ve URL'deki koltukları paketliyoruz
+
+        
+const veriPaketi = {
+    tcNo: document.getElementById('tcNo').value,
+    ad: document.getElementById('ad').value,
+    soyad: document.getElementById('soyad').value,
+    sifre: document.getElementById('sifre').value, // BUNA DİKKAT: Şifreyi buraya ekledik
+    kartNo: document.getElementById('cardNumber').value.replace(/\s/g, ''),
+    skt: document.getElementById('cardExpiry').value,
+    cvc: document.getElementById('cardCVC').value,
+    seferId: seferId,
+    koltuklar: secilenKoltuklar
+};
+
+
+
+            // Butonu "İşleniyor" yap ki kullanıcı 2 kere basamasın
+
+            const btn = document.querySelector('.pay-btn');
+
+            btn.innerHTML = "⏳ İşleniyor...";
+
+            btn.disabled = true;
+
+
+
+            try {
+
+                // Server.js'e veriyi postalıyoruz
+
+                const response = await fetch('http://localhost:3000/api/satin-al', {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json' },
+
+                    body: JSON.stringify(veriPaketi)
+
+                });
+
+
+
+                const sonuc = await response.json();
+
+
+
+               if(sonuc.success) {
+                    // KAYIT BAŞARILIYSA ANİMASYONU GÖSTER
+                    document.getElementById('paymentCard').style.display = 'none';
+                    document.getElementById('summaryCard').style.display = 'none';
+                    
+                    // YENİ EKLENEN: Backend'den gelen PNR numaralarını ekrana yazdır
+                    // Eğer birden fazla koltuk alındıysa araya virgül koyarak gösterir (Örn: 7001, 7002)
+                    document.getElementById('pnrEkrani').innerText = sonuc.pnrs.join(', ');
+
+                    document.getElementById('successSection').style.display = 'flex';
+                }else {
+
+                    alert("Ödeme sırasında hata oluştu: " + sonuc.error);
+
+                    btn.innerHTML = "🔒 Ödemeyi Tamamla";
+
+                    btn.disabled = false;
+
+                }
+
+            } catch(err) {
+
+                alert("Sunucuya bağlanılamadı!");
+
+                console.error(err);
+
+                btn.innerHTML = "🔒 Ödemeyi Tamamla";
+
+                btn.disabled = false;
+
+            }
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>

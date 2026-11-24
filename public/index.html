@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Premium Otobüs Bileti | BiletBul</title>
+
+    <style>
+
+        :root {
+
+            /* Soft Pastel Pembe Vurgu Renkleri */
+
+            --primary-accent: #FFB6C1; 
+
+            --accent-glow: rgba(255, 182, 193, 0.4);
+
+            
+
+            --pure-black: #000000;
+
+            --card-bg: rgba(20, 20, 20, 0.85); 
+
+            --border-color: #333333;
+
+            --text-main: #FFFFFF;
+
+            --text-muted: #888888;
+
+        }
+
+
+
+        color-scheme: dark;
+
+
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+
+
+
+        body {
+
+            background-color: var(--pure-black);
+
+            color: var(--text-main);
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+
+
+            /* ARKA PLAN GÖRSELİ */
+
+            background-image: url('otobusyolculuk.png'); 
+
+            background-size: cover; 
+
+            background-position: center; 
+
+            background-attachment: fixed; 
+
+        }
+
+
+
+        /* HEADER TASARIMI */
+
+        header {
+
+            background: rgba(0, 0, 0, 0.7);
+
+            backdrop-filter: blur(15px);
+
+            -webkit-backdrop-filter: blur(15px);
+
+            padding: 20px 50px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            border-bottom: 1px solid var(--border-color);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+        }
+
+
+
+        .logo {
+
+            font-size: 32px;
+
+            font-weight: 900;
+
+            color: var(--pure-black);
+
+            text-decoration: none;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            -webkit-text-stroke: 1.5px var(--primary-accent);
+
+            text-shadow: 0 0 15px var(--accent-glow);
+
+            transition: all 0.3s ease;
+
+        }
+
+
+
+        .logo:hover { color: var(--primary-accent); }
+
+
+
+        .header-links {
+
+            display: flex;
+
+            gap: 30px;
+
+            align-items: center;
+
+        }
+
+
+
+        /* MENÜ LİNKLERİ (Daha belirgin yapıldı) */
+
+        .header-links a {
+
+            color: #f8deec; 
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.5px;
+
+            transition: all 0.3s ease;
+
+            position: relative;
+
+            padding-bottom: 3px;
+
+        }
+
+
+
+        .header-links a::after {
+
+            content: '';
+
+            position: absolute;
+
+            width: 0;
+
+            height: 2px;
+
+            bottom: -3px;
+
+            left: 0;
+
+            background-color: var(--primary-accent);
+
+            transition: width 0.3s ease;
+
+        }
+
+
+
+        .header-links a:hover { color: var(--primary-accent); }
+
+        .header-links a:hover::after { width: 100%; }
+
+
+
+        /* ANA İSKELET */
+
+        .container {
+
+            flex-grow: 1;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            padding: 40px 20px;
+
+            transition: padding-top 0.5s ease;
+
+        }
+
+
+
+        /* ORTALANMIŞ ARAMA KUTUSU TASARIMI */
+
+        .search-box {
+
+            background: var(--card-bg);
+
+            border: 1px solid var(--border-color);
+
+            padding: 40px 50px;
+
+            border-radius: 20px;
+
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 25px;
+
+            align-items: flex-end; 
+
+            width: 100%;
+
+            max-width: 1100px; 
+
+            backdrop-filter: blur(12px);
+
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+            margin-top: 10vh; 
+
+            z-index: 10;
+
+        }
+
+
+
+        /* JS ile arama yapıldığında arama kutusuna eklenecek sınıf */
+
+        .search-box.active {
+
+            margin-top: 0; 
+
+            padding: 25px 40px; 
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+
+        }
+
+
+
+        .search-box:hover {
+
+            transform: translateY(-4px);
+
+            box-shadow: 0 15px 50px var(--accent-glow);
+
+            border-color: rgba(255, 182, 193, 0.4);
+
+        }
+
+
+
+        .search-box::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 3px;
+
+            background: var(--primary-accent);
+
+            box-shadow: 0 0 15px var(--primary-accent);
+
+            border-top-left-radius: 20px;
+
+            border-top-right-radius: 20px;
+
+        }
+
+
+
+        .input-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            flex: 1;
+
+            min-width: 200px;
+
+        }
+
+
+
+        .input-group label {
+
+            font-size: 13px;
+
+            color: var(--text-muted);
+
+            margin-bottom: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            font-weight: 600;
+
+        }
+
+
+
+        .input-group input {
+
+            font-family: 'Georgia', 'Times New Roman', serif;
+
+            background: rgba(0, 0, 0, 0.5);
+
+            border: 1px solid var(--border-color);
+
+            padding: 16px 20px;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+            color: var(--text-main);
+
+            outline: none;
+
+            transition: all 0.3s ease;
+
+        }
+
+
+
+        .input-group input:focus {
+
+            border-color: var(--primary-accent);
+
+            box-shadow: 0 0 15px rgba(255, 182, 193, 0.2);
+
+            background: rgba(0, 0, 0, 0.8);
+
+        }
+
+
+
+        .swap-icon {
+
+            width: 55px;
+
+            height: 55px;
+
+            border-radius: 50%;
+
+            background: transparent;
+
+            border: 1px solid var(--border-color);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            color: var(--primary-accent);
+
+            font-size: 22px;
+
+            transition: all 0.4s ease;
+
+            margin-bottom: 2px;
+
+        }
+
+
+
+        .swap-icon:hover {
+
+            background-color: var(--primary-accent);
+
+            color: var(--pure-black);
+
+            transform: rotate(180deg) scale(1.1);
+
+            box-shadow: 0 0 20px var(--accent-glow);
+
+            border-color: var(--primary-accent);
+
+        }
+
+
+        .search-btn {
+
+            background: var(--primary-accent);
+
+            color: var(--pure-black);
+
+            border: none;
+
+            padding: 18px 40px;
+
+            /* İŞTE BURASI: Görseldeki ağırbaşlı font */
+
+            font-family: 'Georgia', 'Times New Roman', serif; 
+
+            font-size: 19px;
+
+            font-weight: 800;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            flex: 1;
+
+            min-width: 200px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 2px;
+
+        }
+
+
+
+        .search-btn:hover {
+
+            background: #FFC0CB; 
+
+            transform: translateY(-3px);
+
+            box-shadow: 0 10px 25px var(--accent-glow);
+
+        }
+
+
+
+        .results-section {
+
+            width: 100%;
+
+            max-width: 1100px;
+
+            margin-top: 30px;
+
+            display: none; 
+
+            flex-direction: column;
+
+            gap: 15px;
+
+            animation: slideUpFade 0.6s ease-out forwards;
+
+        }
+
+
+
+        .results-section.show {
+
+            display: flex;
+
+        }
+
+
+
+        @keyframes slideUpFade {
+
+            from { opacity: 0; transform: translateY(30px); }
+
+            to { opacity: 1; transform: translateY(0); }
+
+        }
+
+
+
+        .results-header {
+
+            color: var(--text-main);
+
+            font-size: 20px;
+
+            margin-bottom: 10px;
+
+            border-bottom: 1px solid var(--border-color);
+
+            padding-bottom: 15px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+
+.results-header h3 {
+            font-size: 32px; /* Yazıyı biraz büyüttük */
+            color: #ffffff; /* Ok işaretinin de koyu pembe olması için */
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.8); /* Manzarada kaybolmaması için siyah gölge */
+        }
+
+        .results-header span {
+            color: #ffffff; /* Koyu, asil fuşya tonu */
+            font-weight: 900;
+        }
+
+
+
+        /* SEFER KARTI (SKELETON) TASARIMI */
+
+        .trip-card {
+
+            background: rgba(20, 20, 20, 0.65);
+
+            border: 1px solid var(--border-color);
+
+            border-radius: 12px;
+
+            padding: 25px 30px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            backdrop-filter: blur(10px);
+
+            transition: all 0.3s ease;
+
+        }
+
+
+
+        .trip-card:hover {
+
+            border-color: var(--primary-accent);
+
+            background: rgba(30, 20, 25, 0.85);
+
+            transform: translateX(5px);
+
+        }
+
+
+
+        .trip-company {
+
+            display: flex;
+
+            flex-direction: column;
+
+            width: 200px;
+
+        }
+
+
+
+        .trip-company h3 {
+
+            font-size: 18px;
+
+            color: var(--text-muted); 
+
+            margin-bottom: 5px;
+
+        }
+
+
+
+        .trip-company p {
+
+            font-size: 13px;
+
+            color: #555;
+
+        }
+
+
+
+        .trip-time {
+
+            text-align: center;
+
+            flex-grow: 1;
+
+        }
+
+
+
+        .trip-time h2 {
+
+            font-size: 24px;
+
+            color: var(--text-muted);
+
+            letter-spacing: 1px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+
+        .trip-time p {
+
+            font-size: 13px;
+
+            color: #555;
+
+        }
+
+
+
+        .trip-action {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-end;
+
+            width: 200px;
+
+        }
+
+
+.trip-price {
+            display: none; /* Fiyat metnini ekrandan tamamen gizler */
+        }
+
+
+
+        .trip-action .select-btn {
+
+            background: transparent;
+
+            color: var(--primary-accent);
+
+            border: 2px solid var(--primary-accent);
+
+            padding: 10px 30px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+            transition: all 0.3s;
+
+            text-transform: uppercase;
+
+        }
+
+
+
+        .trip-action .select-btn:hover {
+
+            background: var(--primary-accent);
+
+            color: var(--pure-black);
+
+            box-shadow: 0 0 15px var(--accent-glow);
+
+        }
+
+
+
+        /* MOBİL UYUM */
+
+        @media (max-width: 900px) {
+
+            .search-box {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+            }
+
+            .trip-card {
+
+                flex-direction: column;
+
+                gap: 20px;
+
+                text-align: center;
+
+            }
+
+            .trip-action, .trip-company {
+
+                align-items: center;
+
+                width: 100%;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <header>
+
+        <a href="index.html" class="logo">BiletBul</a>
+
+        <div class="header-links">
+
+            <a href="sorgula.html">Seyahat Sorgula</a>
+
+            <a href="login.html">Üye Girişi</a>
+
+        </div>
+
+    </header>
+
+
+
+    <div class="container">
+
+        
+
+        <form id="searchForm" class="search-box">
+
+            
+
+            <div class="input-group">
+
+                <label for="departure_city">Nereden</label>
+
+                <input type="text" id="departure_city" name="departure_city" placeholder="Örn: İstanbul" required>
+
+            </div>
+
+
+
+            <div class="swap-icon" title="Yönleri Değiştir">
+
+                ⇄
+
+            </div>
+
+
+
+            <div class="input-group">
+
+                <label for="destination_city">Nereye</label>
+
+                <input type="text" id="destination_city" name="destination_city" placeholder="Örn: Ankara" required>
+
+            </div>
+
+
+
+            <div class="input-group">
+
+                <label for="travel_date">Gidiş Tarihi</label>
+
+                <input type="date" id="travel_date" name="travel_date" required>
+
+            </div>
+
+
+
+            <button type="submit" class="search-btn">Sefer Ara</button>
+
+        </form>
+
+
+
+        <div id="resultsSection" class="results-section">
+
+            
+
+            <div class="results-header">
+
+                <h3><span>[Kalkış]</span> ➔ <span>[Varış]</span></h3>
+
+                <p>[Tarih Bilgisi] | [X] Sefer Bulundu</p>
+
+            </div>
+
+
+
+            <div class="trip-card">
+
+                <div class="trip-company">
+
+                    <h3>[Firma Adı]</h3>
+
+                    <p>[Koltuk Tipi] | [Özellikler]</p>
+
+                </div>
+
+                <div class="trip-time">
+
+                    <h2>--:-- ➔ --:--</h2>
+
+                    <p>Süre: -- Saat -- Dakika</p>
+
+                </div>
+
+                <div class="trip-action">
+
+                    <div class="trip-price">--- ₺</div>
+
+                    <a href="koltuk-secimi.html" class="select-btn">Seç</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="trip-card">
+
+                <div class="trip-company">
+
+                    <h3>[Firma Adı]</h3>
+
+                    <p>[Koltuk Tipi] | [Özellikler]</p>
+
+                </div>
+
+                <div class="trip-time">
+
+                    <h2>--:-- ➔ --:--</h2>
+
+                    <p>Süre: -- Saat -- Dakika</p>
+
+                </div>
+
+                <div class="trip-action">
+
+                    <div class="trip-price">--- ₺</div>
+
+                    <a href="koltuk-secimi.html" class="select-btn">Seç</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="trip-card">
+
+                <div class="trip-company">
+
+                    <h3>[Firma Adı]</h3>
+
+                    <p>[Koltuk Tipi] | [Özellikler]</p>
+
+                </div>
+
+                <div class="trip-time">
+
+                    <h2>--:-- ➔ --:--</h2>
+
+                    <p>Süre: -- Saat -- Dakika</p>
+
+                </div>
+
+                <div class="trip-action">
+
+                    <div class="trip-price">--- ₺</div>
+
+                    <a href="koltuk-secimi.html" class="select-btn">Seç</a>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+   <script>
+
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+
+            e.preventDefault(); 
+
+            
+
+            // Input'lardan verileri al
+
+            const kalkis = document.getElementById('departure_city').value;
+
+            const varis = document.getElementById('destination_city').value;
+
+            const tarih = document.getElementById('travel_date').value;
+
+
+
+            this.classList.add('active');
+
+            const resultsSection = document.getElementById('resultsSection');
+
+            
+
+            resultsSection.innerHTML = '<div style="text-align:center; padding:50px;">Seferler Aranıyor...</div>';
+
+            resultsSection.classList.add('show');
+
+            
+
+            try {
+
+                // Backend'e istek at (Veritabanına bağlanır)
+
+                const response = await fetch(`/api/seferler?kalkis=${kalkis}&varis=${varis}&tarih=${tarih}`);
+
+                const seferler = await response.json();
+
+
+
+                if(seferler.length === 0) {
+
+                    resultsSection.innerHTML = `
+
+                        <div class="results-header">
+
+                            <h3><span>${kalkis}</span> ➔ <span>${varis}</span></h3>
+
+                            <p>${tarih} | 0 Sefer Bulundu</p>
+
+                        </div>
+
+                        <div style="text-align:center; padding:30px; color:var(--text-muted);">Seçtiğiniz tarihte sefer bulunmamaktadır.</div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+
+                let htmlIcerik = `
+
+                    <div class="results-header">
+
+                        <h3><span>${kalkis}</span> ➔ <span>${varis}</span></h3>
+
+                        <p>${tarih} | ${seferler.length} Sefer Bulundu</p>
+
+                    </div>
+
+                `;
+
+
+
+                // Veritabanından gelen seferleri ekrana bas
+
+                seferler.forEach(sefer => {
+
+                    htmlIcerik += `
+
+                   <div class="trip-card">
+                        <div class="trip-company">
+                            <h3>${sefer['Firma Adı']}</h3>
+                            <p>Kapasite: ${sefer['Kapasite']} Kişi</p>
+                        </div>
+                        <div class="trip-time">
+                            <h2>${new Date(sefer['Kalkış']).toISOString().substr(11, 5)} ➔ ${new Date(sefer['Varış']).toISOString().substr(11, 5)}</h2>
+                            <p>Peron: ${sefer['Peron']}</p>
+                        </div>
+                        <div class="trip-action">
+                            <div class="trip-price">${sefer['fiyat']} ₺</div>
+                            <a href="koltuk-secimi.html?sefer_id=${sefer['Sefer No']}" class="select-btn">Seç</a>
+                        </div>
+                    </div>
+
+                    `;
+
+                });
+
+
+
+                resultsSection.innerHTML = htmlIcerik;
+
+                
+
+                setTimeout(() => {
+
+                    window.scrollBy({ top: 150, behavior: 'smooth' });
+
+                }, 300);
+
+
+
+            } catch (error) {
+
+                console.error("API Bağlantı Hatası:", error);
+
+                resultsSection.innerHTML = '<div style="text-align:center; padding:50px; color:#FF6B6B;">Sisteme bağlanılamadı! Lütfen sunucunun açık olduğundan emin olun.</div>';
+
+            }
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>

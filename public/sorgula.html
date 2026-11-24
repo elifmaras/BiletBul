@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seyahat Sorgula | BiletBul</title>
+    <style>
+        :root {
+            --primary-accent: #FFB6C1; 
+            --accent-glow: rgba(255, 182, 193, 0.4);
+            --pure-black: #000000;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --border-color: #333333;
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+        }
+
+        color-scheme: dark;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: var(--pure-black); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column;
+            background-image: url('sorgula-arkaplan.png'); background-size: cover; background-position: center; background-attachment: fixed; 
+        }
+
+        header { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--pure-black); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; -webkit-text-stroke: 1.5px var(--primary-accent); text-shadow: 0 0 15px var(--accent-glow); transition: all 0.3s ease; }
+        .logo:hover { color: var(--primary-accent); }
+        .header-links { display: flex; gap: 25px; align-items: center; }
+        .header-links a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: all 0.3s ease; position: relative; }
+        .header-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background-color: var(--primary-accent); transition: width 0.3s ease; }
+        .header-links a:hover { color: var(--text-main); }
+        .header-links a:hover::after { width: 100%; }
+
+        .query-container { display: flex; flex-direction: column; align-items: center; max-width: 1200px; margin: 60px auto; padding: 0 20px; gap: 40px; }
+        .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(10px); width: 100%; max-width: 550px; position: relative; overflow: hidden; }
+        .glass-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--primary-accent); box-shadow: 0 0 15px var(--primary-accent); }
+        .glass-card h2 { font-size: 20px; margin-bottom: 30px; color: var(--text-main); text-align: center; font-weight: 500; line-height: 1.4; }
+        .glass-card h2 b { color: var(--primary-accent); }
+
+        .input-group { display: flex; flex-direction: column; margin-bottom: 20px; }
+        .input-group input { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 15px 20px; border-radius: 10px; font-size: 15px; color: var(--text-main); outline: none; transition: all 0.3s ease; }
+        .input-group input:focus { border-color: var(--primary-accent); box-shadow: 0 0 15px rgba(255, 182, 193, 0.2); background: rgba(0, 0, 0, 0.8); }
+
+        .login-helpers { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 14px; }
+        .login-helpers label { display: flex; align-items: center; gap: 10px; color: var(--text-muted); cursor: pointer; }
+        .login-helpers a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+        .login-helpers a:hover { color: var(--primary-accent); }
+
+        .btn { width: 100%; padding: 16px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; text-align: center; border: none; display: block; text-decoration: none; }
+        .btn-primary { background: var(--primary-accent); color: var(--pure-black); }
+        .btn-primary:hover { background: #FFC0CB; transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
+        .btn-outline { 
+    background: transparent; 
+    color: var(--primary-accent); 
+    border: 2px solid var(--primary-accent); 
+    margin: 15px auto 0 auto; /* Sağı ve solu auto yaparak butonu ortalar */
+    max-width: 250px; /* Butonun sağa sola yapışmasını engeller, boyutunu kibarlaştırır */
+}
+        .btn-outline:hover { background: rgba(255, 182, 193, 0.1); }
+        .btn-refund { background: transparent; color: #FF6B6B; border: 2px solid #FF6B6B; max-width: 250px; margin: 20px auto 0 auto; }
+        .btn-refund:hover { background: rgba(255, 107, 107, 0.1); box-shadow: 0 0 15px rgba(255, 107, 107, 0.3); color: #FF8A8A; transform: translateY(-2px); }
+
+        .tabs { display: flex; justify-content: center; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .tab-item { color: var(--text-muted); font-size: 15px; cursor: pointer; padding: 5px 15px; transition: all 0.3s; position: relative; }
+        .tab-item.active { color: var(--primary-accent); font-weight: bold; font-size: 18px; }
+        .tab-item.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 2px; background: var(--primary-accent); box-shadow: 0 0 10px var(--primary-accent); }
+
+        #ticketDetails, #myTicketsSection { display: none; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ticket-info-box { background: rgba(0, 0, 0, 0.4); border: 1px dashed var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .ticket-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .ticket-row span { color: var(--text-muted); }
+        .ticket-row strong { color: var(--text-main); text-align: right; }
+
+        .divider-text { text-align: center; color: var(--text-muted); font-size: 13px; margin: 25px 0 15px 0; }
+        .footer-note { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 20px; line-height: 1.5; }
+        .footer-note a { color: var(--primary-accent); text-decoration: none; }
+
+        /* Kaydırılabilir Bilet Listesi İçin Stil */
+        #ticketsScrollArea { max-height: 400px; overflow-y: auto; padding-right: 10px; margin-bottom: 15px; }
+        #ticketsScrollArea::-webkit-scrollbar { width: 6px; }
+        #ticketsScrollArea::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        #ticketsScrollArea::-webkit-scrollbar-thumb { background: var(--primary-accent); border-radius: 10px; }
+
+/* YARDIM METİNLERİ İÇİN STİL */
+        .help-text-box {
+            display: none; /* Başlangıçta gizli */
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.55); /* Silik font */
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid var(--primary-accent);
+            padding: 12px 15px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .help-text-box b {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+    </style>
+</head>
+<body>
+
+   <header>
+        <a href="index.html" class="logo">BiletBul</a>
+        <div class="header-links">
+            <a href="sorgula.html">Seyahat Sorgula</a>
+            <a href="login.html">Üye Girişi</a>
+        </div>
+    </header>
+
+    <div class="query-container">
+        
+        <div class="glass-card">
+            <div class="tabs">
+                <div class="tab-item active">Otobüs Biletini Sorgula</div>
+            </div>
+
+            <div id="queryFormWrapper">
+                <h2><b>PNR</b> Numaranız ile Biletinizi Sorgulayın</h2>
+                <form id="pnrSearchForm">
+                    <div class="input-group">
+                        <input type="text" id="pnr_number" placeholder="PNR Numaranız (Örn: 7001)" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="contact" placeholder="Cep Telefonu veya E-mail" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="searchBtn">Biletimi Sorgula</button>
+                </form>
+               <div class="footer-note">
+                    PNR numaranızı bulmak için onay e-mail veya Cep telefonunuzu kontrol ediniz. <br>
+                    <a href="#" id="linkPnrHelp">PNR kodunuzu bulamıyor musunuz?</a>
+                    
+                    <div id="boxPnrHelp" class="help-text-box">
+                        Biletinizi satın alırken kullandığınız e-posta adresine veya telefonunuza SMS olarak <b>"BiletBul"</b> başlığıyla gönderilen mesaja bakınız. PNR kodunuz genelde 4 haneli bir rakamdır. Hala bulamıyorsanız lütfen bizimle iletişime geçin: <a href="mailto:destek@biletbul.com">destek@biletbul.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ticketDetails">
+                <h2 style="margin-bottom: 15px;">Biletiniz <b>Bulundu</b></h2>
+                <div class="ticket-info-box">
+                    <div class="ticket-row"><span>Yolcu:</span> <strong id="resYolcu">-</strong></div>
+                    <div class="ticket-row"><span>PNR Kodu:</span> <strong id="resPNR" style="color: var(--primary-accent);">-</strong></div>
+                    <div class="ticket-row"><span>Firma:</span> <strong id="resFirma">-</strong></div>
+                    <div class="ticket-row"><span>Güzergah:</span> <strong id="resGuzergah">-</strong></div>
+                    <div class="ticket-row"><span>Tarih / Saat:</span> <strong id="resTarih">-</strong></div>
+                    <div class="ticket-row"><span>Koltuk:</span> <strong id="resKoltuk">-</strong></div>
+                    <div class="ticket-row"><span>Durum:</span> <strong id="resDurum" style="color: #2ecc71;">-</strong></div>
+                </div>
+                <a href="iade.html" class="btn btn-refund">Bileti İade Et</a>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            
+            <div id="quickLoginSection">
+                <h2><b>Tüm biletlerinizi</b> görmek için üye girişi yapın</h2>
+                <form id="quickLoginForm">
+                    <div class="input-group">
+                        <input type="email" id="quickEmail" placeholder="E-posta Adresi" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="quickPass" placeholder="Şifre" required>
+                    </div>
+                  <div class="login-helpers">
+                        <label><input type="checkbox" style="width:16px; height:16px; accent-color: var(--primary-accent);"> Beni Hatırla</label>
+                        <a href="#" id="linkPassHelp">Şifrenizi mi Unuttunuz?</a>
+                    </div>
+                    
+                    <div id="boxPassHelp" class="help-text-box" style="margin-bottom: 20px;">
+                        Şifrenizi sıfırlamak için sisteme kayıtlı e-posta adresinizden <b>destek@biletbul.com</b> adresine talebinizi iletebilir veya <b>0850 123 45 67</b> numaralı çağrı merkezimizi arayabilirsiniz.
+                    </div>
+                    <button type="submit" id="btnListTickets" class="btn btn-primary">Giriş Yap</button>
+                    <div class="divider-text">Henüz üye değil misiniz?</div>
+                    <a href="register.html" class="btn btn-outline">Üye Ol</a>
+                </form>
+            </div>
+
+            <div id="myTicketsSection">
+                <h2 style="margin-bottom: 20px;">Tüm <b>Biletlerim</b></h2>
+                
+                <div id="ticketsScrollArea">
+                    </div>
+
+                <button class="btn btn-outline" onclick="window.location.reload()">Çıkış Yap</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // 1. TEKLİ PNR SORGULAMA JS
+        document.getElementById('pnrSearchForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            const pnr = document.getElementById('pnr_number').value;
+            const contact = document.getElementById('contact').value;
+            const btn = document.getElementById('searchBtn');
+
+            btn.innerHTML = "⏳ Sorgulanıyor...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/sorgula', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pnr: pnr, iletisim: contact })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('resYolcu').innerText = data.bilet.yolcu;
+                    document.getElementById('resPNR').innerText = data.bilet.bilet_id;
+                    document.getElementById('resFirma').innerText = data.bilet.firma_adi;
+                    document.getElementById('resGuzergah').innerText = data.bilet.guzergah;
+                    document.getElementById('resKoltuk').innerText = data.bilet.koltuk_no;
+                    document.getElementById('resDurum').innerText = data.bilet.odeme_durumu;
+                    
+
+                    const tarih = new Date(data.bilet.sefer_tarihi).toLocaleDateString('tr-TR');
+                    let saat = String(data.bilet.kalkis_saati);
+                    if(saat.includes('T')) saat = saat.split('T')[1].substring(0, 5);
+                    else saat = saat.substring(0, 5);
+                    document.getElementById('resTarih').innerText = `${tarih} - ${saat}`;
+
+                      document.querySelector('.btn-refund').href = `iade.html?pnr=${data.bilet.bilet_id}`;
+
+                    document.getElementById('queryFormWrapper').style.display = 'none';
+                    document.getElementById('ticketDetails').style.display = 'block';
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Sorgulama hatası:", error);
+                alert("Sunucuya bağlanılamadı!");
+            }
+            btn.innerHTML = "Biletimi Sorgula";
+            btn.disabled = false;
+        });
+
+        // 2. YENİ: KULLANICININ TÜM BİLETLERİNİ GETİRME JS
+        document.getElementById('quickLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('quickEmail').value;
+            const pass = document.getElementById('quickPass').value;
+            const btn = document.getElementById('btnListTickets');
+
+            btn.innerHTML = "⏳ Biletler Aranıyor...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/biletlerim', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, sifre: pass })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Formu gizle, liste alanını göster
+                    document.getElementById('quickLoginSection').style.display = 'none';
+                    document.getElementById('myTicketsSection').style.display = 'block';
+                  
+                    
+                    const container = document.getElementById('ticketsScrollArea');
+                    
+                    if(data.biletler.length === 0) {
+                        container.innerHTML = "<p style='text-align:center; color:var(--text-muted); margin-bottom: 20px;'>Geçmişe dönük kayıtlı biletiniz bulunmamaktadır.</p>";
+                    } else {
+                        // Biletleri Döngüyle Karta Çevirip Ekrana Basıyoruz
+                        container.innerHTML = data.biletler.map(b => {
+                            const tarih = new Date(b.sefer_tarihi).toLocaleDateString('tr-TR');
+                            let saat = String(b.kalkis_saati);
+                            if(saat.includes('T')) saat = saat.split('T')[1].substring(0, 5);
+                            else saat = saat.substring(0, 5);
+                            
+                            return `
+                            <div class="ticket-info-box" style="margin-bottom: 15px; padding: 15px;">
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 10px;">
+                                    <span style="color: var(--primary-accent); font-weight: bold; font-size: 16px;">PNR: ${b.bilet_id}</span>
+                                    <span style="color: #2ecc71; font-weight: bold;">${b.fiyat} ₺</span>
+                                </div>
+                                <div style="font-size: 13px; color: #ccc; line-height: 1.8;">
+                                    <div style="display: flex; justify-content: space-between;"><span>Firma:</span> <strong style="color:#fff;">${b.firma_adi}</strong></div>
+                                    <div style="display: flex; justify-content: space-between;"><span>Rota:</span> <strong style="color:#fff;">${b.guzergah}</strong></div>
+                                    <div style="display: flex; justify-content: space-between;"><span>Zaman:</span> <strong style="color:#fff;">${tarih} - ${saat}</strong></div>
+                                    <div style="display: flex; justify-content: space-between;"><span>Koltuk:</span> <strong style="color:#fff;">${b.koltuk_no}</strong></div>
+                                </div>
+                            </div>`;
+                        }).join('');
+                    }
+                } else {
+                    alert(data.message);
+                    btn.innerHTML = "Giriş Yap";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error("Hata:", error);
+                alert("Sunucuya bağlanılamadı!");
+                btn.innerHTML = "Giriş Yap";
+                btn.disabled = false;
+            }
+        });
+
+        // 3. YARDIM METİNLERİNİ AÇIP KAPATMA (TOGGLE)
+        document.getElementById('linkPnrHelp').addEventListener('click', function(e) {
+            e.preventDefault(); // Sayfanın yukarı zıplamasını engeller
+            const helpBox = document.getElementById('boxPnrHelp');
+            helpBox.style.display = (helpBox.style.display === 'block') ? 'none' : 'block';
+        });
+
+        document.getElementById('linkPassHelp').addEventListener('click', function(e) {
+            e.preventDefault();
+            const helpBox = document.getElementById('boxPassHelp');
+            helpBox.style.display = (helpBox.style.display === 'block') ? 'none' : 'block';
+        });
+    </script>
+
+</body>
+</html>
